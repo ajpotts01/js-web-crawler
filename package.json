@@ -1,0 +1,24 @@
+{
+  "name": "js-web-crawler",
+  "version": "1.0.0",
+  "description": "JavaScript web crawler for boot.dev",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajpotts01/js-web-crawler.git"
+  },
+  "keywords": [
+    "javascript",
+    "web",
+    "crawler"
+  ],
+  "author": "ajpotts01",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajpotts01/js-web-crawler/issues"
+  },
+  "homepage": "https://github.com/ajpotts01/js-web-crawler#readme"
+}
