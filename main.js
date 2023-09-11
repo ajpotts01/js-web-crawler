@@ -1,1 +1,3 @@
-console.log("Hello world!");
+const { normaliseURL } = require("./crawl");
+
+normaliseURL("https://blog.boot.dev/path/")
