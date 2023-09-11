@@ -28,3 +28,7 @@ test("Normalise paths 3", () => {
 test("Normalise paths 4", () => {
     expect(normaliseURL("http://blog.boot.dev/path")).toBe("blog.boot.dev/path");
 });
+
+test("Normalise caps 1", () => {
+    expect(normaliseURL("http://BLOG.boot.DEV/path")).toBe("blog.boot.dev/path");
+});

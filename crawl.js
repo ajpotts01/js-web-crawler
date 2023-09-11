@@ -1,13 +1,11 @@
 function normaliseURL(path) {
     const parsedURL = new URL(path);
-    let normalisedURL = "";
-    let pathname = parsedURL.pathname;
+    let normalisedURL = `${parsedURL.hostname}${parsedURL.pathname}`;
 
-    if (pathname.substring(pathname.length-1) == "/") {
-        pathname = pathname.slice(0, -1);
+    if (normalisedURL.length > 0 && normalisedURL.slice(-1) === "/") {
+        normalisedURL = normalisedURL.slice(0, -1);
     }
 
-    normalisedURL += parsedURL.hostname + pathname;
     return normalisedURL;   
 }
 
