@@ -23,5 +23,8 @@
   "homepage": "https://github.com/ajpotts01/js-web-crawler#readme",
   "devDependencies": {
     "jest": "^29.6.4"
+  },
+  "dependencies": {
+    "jsdom": "^22.1.0"
   }
 }
