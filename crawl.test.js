@@ -45,3 +45,27 @@ test("Extract URLS 1", () => {
 
     expect(getURLsFromHTML(html, "https://www.ajpcloudblog.com")).toStrictEqual(["https://www.ajpcloudblog.com/what.html", "https://www.ajpcloudblog.com/yeah.html"]);
 });
+
+test('Extract URLs absolute', () => {
+    const inputURL = 'https://ajpcloudblog.com'
+    const inputBody = '<html><body><a href="https://ajpcloudblog.com"><span>AJP Cloud Blog</span></a></body></html>'
+    const actual = getURLsFromHTML(inputBody, inputURL)
+    const expected = [ 'https://ajpcloudblog.com/' ]
+    expect(actual).toEqual(expected)
+});
+
+test('Extract URLs relative', () => {
+    const inputURL = 'https://www.ajpcloudblog.com'
+    const inputBody = '<html><body><a href="/path/one"><span>AJP Cloud Blog</span></a></body></html>'
+    const actual = getURLsFromHTML(inputBody, inputURL)
+    const expected = [ 'https://www.ajpcloudblog.com/path/one' ]
+    expect(actual).toEqual(expected)
+});
+
+test('Extract URLs handle error', () => {
+    const inputURL = 'https://www.ajpcloudblog.com'
+    const inputBody = '<html><body><a href="path/one"><span>AJP Cloud Blog</span></a></body></html>'
+    const actual = getURLsFromHTML(inputBody, inputURL)
+    const expected = [ ]
+    expect(actual).toEqual(expected)
+});

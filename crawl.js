@@ -18,7 +18,15 @@ function getURLsFromHTML(html, baseURL) {
 
     const links = dom.window.document.querySelectorAll("a");
     for (let link of links) {
-        result.push(`${baseURL}${link.href}`);
+        try {
+            if (link.href.slice(0, 1) === "/") {
+                result.push(new URL(link.href, baseURL).href);
+            } else {
+                result.push(new URL(link.href).href);
+            }
+        } catch (ex) {
+            console.log(`${ex.message} attempting to get ${link.href}`);
+        }
     }
     console.log(result);
     return result;
