@@ -1,8 +1,16 @@
-const { normaliseURL, getURLsFromHTML } = require("./crawl");
+const { crawlPage } = require("./crawl");
 
-normaliseURL("https://blog.boot.dev/path/")
+function main() {
+    // Process.argv also counts the execution path
+    if (process.argv.length != 3) {
+        console.log("1 argument required: BASE_URL");
+        return
+    }
 
-const html = "<html><head><title>Yep</title></head><body><div><p>Hello</p><a href='/what.html'/></div><a href='/yeah.html'/></body></html>";
-const baseUrl = "https://ajpcloudblog.com";
+    const baseUrl = process.argv[2];
+    console.log(`You entered a base URL of: ${baseUrl}`);
 
-getURLsFromHTML(html, baseUrl);
+    crawlPage(baseUrl);
+}
+
+main();
