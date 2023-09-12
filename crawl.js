@@ -28,11 +28,12 @@ function getURLsFromHTML(html, baseURL) {
             console.log(`${ex.message} attempting to get ${link.href}`);
         }
     }
-    console.log(result);
     return result;
 }
 
 function handleHttpStatusCode(statusCode) {
+    console.log(`Received status code: ${statusCode}`);
+
     if (statusCode >= 400 && statusCode < 500) {
         return "Error";
     }
@@ -44,21 +45,55 @@ function handleHttpStatusCode(statusCode) {
     return "Unknown";
 }
 
-async function crawlPage(url) {
+async function crawlPage(baseUrl, currentUrl, pages) {
+    const currentUrlNorm = normaliseURL(currentUrl);
+
+    const baseUrlObj = new URL(baseUrl);
+    const currentUrlObj = new URL(currentUrl);
+
+    if (baseUrlObj.hostname !== currentUrlObj.hostname) {
+        console.log(`Host mismatch: ${baseUrlObj.hostname} vs ${currentUrlObj.hostname}`);
+        return pages;
+    }
+
+    if (pages[currentUrlNorm] > 0) {
+        console.log(`${currentUrlNorm} has already been crawled!`);
+        pages[currentUrlNorm]++;
+        return pages;
+    }
+
+    if (currentUrl !== baseUrl) {
+        pages[currentUrlNorm] = 1;
+    } else {
+        pages[currentUrlNorm] = 0;
+    }
+
     try {
-        response = await fetch(url);
-        reqStatus = handleHttpStatusCode(response.statusCode);
+        console.log(`Making a request to ${currentUrl}`);
+
+        response = await fetch(currentUrl);
+        reqStatus = handleHttpStatusCode(response.status);
         reqStatus &= response.headers["content-type"] === "text/html";
     } catch (ex) {
+        console.log(ex);
         reqStatus = "Error";
     }
 
     if (reqStatus === "Error") {
-        console.log(`There was an error crawling ${url}.`);
+        console.log(`There was an error crawling ${currentUrl}.`);
+        return pages;
     } else {
         console.log("Page successfully loaded!");
-        console.log(await response.text());
+        let pageBody = await response.text();
+        let pageUrls = getURLsFromHTML(pageBody, baseUrl);
+
+        for (const url of pageUrls) {
+            console.log(`Crawling: ${url}`);
+            pages = await crawlPage(baseUrl, url, pages);
+        }
     }
+
+    return pages;
 }
 
 module.exports = {
