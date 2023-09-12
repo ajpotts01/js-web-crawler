@@ -1,5 +1,5 @@
 const { test, expect } = require("@jest/globals");
-const { normaliseURL, getURLsFromHTML } = require("./crawl.js");
+const { normaliseURL, getURLsFromHTML, handleHttpStatusCode } = require("./crawl.js");
 
 /*
     To "normalize" means to "make the same". 
@@ -47,25 +47,40 @@ test("Extract URLS 1", () => {
 });
 
 test('Extract URLs absolute', () => {
-    const inputURL = 'https://ajpcloudblog.com'
-    const inputBody = '<html><body><a href="https://ajpcloudblog.com"><span>AJP Cloud Blog</span></a></body></html>'
-    const actual = getURLsFromHTML(inputBody, inputURL)
-    const expected = [ 'https://ajpcloudblog.com/' ]
-    expect(actual).toEqual(expected)
+    const inputURL = 'https://ajpcloudblog.com';
+    const inputBody = '<html><body><a href="https://ajpcloudblog.com"><span>AJP Cloud Blog</span></a></body></html>';
+    const actual = getURLsFromHTML(inputBody, inputURL);
+    const expected = [ 'https://ajpcloudblog.com/' ];
+    expect(actual).toEqual(expected);
 });
 
 test('Extract URLs relative', () => {
-    const inputURL = 'https://www.ajpcloudblog.com'
-    const inputBody = '<html><body><a href="/path/one"><span>AJP Cloud Blog</span></a></body></html>'
-    const actual = getURLsFromHTML(inputBody, inputURL)
-    const expected = [ 'https://www.ajpcloudblog.com/path/one' ]
-    expect(actual).toEqual(expected)
+    const inputURL = 'https://www.ajpcloudblog.com';
+    const inputBody = '<html><body><a href="/path/one"><span>AJP Cloud Blog</span></a></body></html>';
+    const actual = getURLsFromHTML(inputBody, inputURL);
+    const expected = [ 'https://www.ajpcloudblog.com/path/one' ];
+    expect(actual).toEqual(expected);
 });
 
 test('Extract URLs handle error', () => {
-    const inputURL = 'https://www.ajpcloudblog.com'
-    const inputBody = '<html><body><a href="path/one"><span>AJP Cloud Blog</span></a></body></html>'
-    const actual = getURLsFromHTML(inputBody, inputURL)
-    const expected = [ ]
-    expect(actual).toEqual(expected)
+    const inputURL = 'https://www.ajpcloudblog.com';
+    const inputBody = '<html><body><a href="path/one"><span>AJP Cloud Blog</span></a></body></html>';
+    const actual = getURLsFromHTML(inputBody, inputURL);
+    const expected = [ ];
+    expect(actual).toEqual(expected);
+});
+
+/* Tests for crawling */
+test("Crawling - test error code handling", () => {
+    const statusCode = 404;
+    const actual = handleHttpStatusCode(statusCode);
+    const expected = "Error";
+    expect(actual).toBe(expected);
+});
+
+test("Crawling - test success code handling", () => {
+    const statusCode = 200;
+    const actual = handleHttpStatusCode(statusCode);
+    const expected = "Success";
+    expect(actual).toBe(expected);
 });

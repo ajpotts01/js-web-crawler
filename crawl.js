@@ -32,7 +32,38 @@ function getURLsFromHTML(html, baseURL) {
     return result;
 }
 
+function handleHttpStatusCode(statusCode) {
+    if (statusCode >= 400 && statusCode < 500) {
+        return "Error";
+    }
+
+    if (statusCode >= 200 && statusCode < 300) {
+        return "Success";
+    }
+
+    return "Unknown";
+}
+
+async function crawlPage(url) {
+    try {
+        response = await fetch(url);
+        reqStatus = handleHttpStatusCode(response.statusCode);
+        reqStatus &= response.headers["content-type"] === "text/html";
+    } catch (ex) {
+        reqStatus = "Error";
+    }
+
+    if (reqStatus === "Error") {
+        console.log(`There was an error crawling ${url}.`);
+    } else {
+        console.log("Page successfully loaded!");
+        console.log(await response.text());
+    }
+}
+
 module.exports = {
     normaliseURL,
     getURLsFromHTML,
+    handleHttpStatusCode,
+    crawlPage
 };
